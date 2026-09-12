@@ -33,11 +33,7 @@ AeroNet solves this with an edge-deployable, dual-stage vision architecture. It 
 
 **High-Precision Classification** — trained on thousands of aerial drone and bird imagery samples, achieving 98.66% validation accuracy with sub-percent false positive rates.
 
-**Modern Cyberpunk Tactical HUD** — dark neon aerospace theme, dynamic status indicators, target reticle bracket tracking, and live probability distribution meters.
-
 **Session Telemetry** — tracks live scan count, threat detection ratios, running confidence averages, and real-time audit logs without persistent database clutter.
-
-**Zero Client Setup** — entirely web-based edge demonstrator served directly via FastAPI and modern responsive HTML5/CSS3/ES6 JavaScript.
 
 ---
 
