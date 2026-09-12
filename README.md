@@ -19,9 +19,9 @@
 
 ## What it is
 
-Distinguishing between low-flying unmanned aerial vehicles (drones) and natural birds in real time is one of the hardest challenges in perimeter security and airspace monitoring. Traditional radar struggles with small radar cross-sections at low altitudes, while naive computer vision models either choke on latency or misclassify birds as aerial threats.
+I built AeroNet to distinguish between low-flying unmanned aerial vehicles (drones) and natural birds in real time — one of the hardest challenges in perimeter security and airspace monitoring. Traditional radar struggles with small radar cross-sections at low altitudes, while naive computer vision models either choke on latency or misclassify birds as aerial threats.
 
-AeroNet solves this with an edge-deployable, dual-stage vision architecture. It ingests aerial imagery, localizes candidate airborne objects in real time with YOLOv8 at ~15ms inference latency, extracts deep 512-dimensional visual embeddings using a ResNet-18 backbone, and classifies targets with a calibrated classifier — achieving 98.66% validation accuracy. When an unauthorized drone enters the sector, the system highlights the target reticle in red and updates real-time telemetry metrics.
+AeroNet solves this with an edge-deployable, dual-stage vision architecture. It captures live camera feeds, localizes candidate airborne objects in real time with YOLOv8 at ~15ms inference latency, extracts deep 512-dimensional visual embeddings using a ResNet-18 backbone, and classifies targets with a calibrated classifier — achieving 98.66% validation accuracy. When an unauthorized drone enters the sector, the system highlights the target reticle in red and updates real-time telemetry metrics.
 
 ---
 
@@ -169,7 +169,6 @@ Deploying AeroNet on Render is completely free and takes under 3 minutes:
    Click **Create Web Service**. Render will automatically install dependencies, load the model bundle, and launch your live app at `https://aeronet-ng9t.onrender.com`!
 
 ---
-
 <div align="center">
 <sub>Built by <a href="https://github.com/ahlawatansh">Ansh Ahlawat</a> · CSE undergrad, VIT Vellore</sub>
 <br>
