@@ -1,6 +1,6 @@
 <div align="center">
 
-# AeroNet — Real-Time Drone & Bird Airspace Defense Surveillance
+# AeroNet — Real-Time Drone & Bird Defense Zone Surveillance
 
 **An embedded edge-AI surveillance system combining YOLOv8 target localization, ResNet-18 visual feature extraction, and real-time classification to secure sensitive airspace.**
 
@@ -11,7 +11,7 @@
 [![OpenCV](https://img.shields.io/badge/OpenCV-Headless-5C3EE8.svg?logo=opencv)](https://opencv.org/)
 [![Render](https://img.shields.io/badge/Deploy-Render-46E3B7.svg?logo=render)](https://render.com/)
 
-### 🔗 Live: [aeronet.onrender.com](https://aeronet.onrender.com/)
+### 🔗 Live: https://aeronet-ng9t.onrender.com/
 
 </div>
 
@@ -19,21 +19,9 @@
 
 ## What it is
 
-I built AeroNet as my final year capstone project for placements because distinguishing between low-flying unmanned aerial vehicles (drones) and natural birds in real time is one of the hardest challenges in perimeter security and airspace monitoring. Traditional radar struggles with small radar cross-sections at low altitudes, while naive computer vision models either choke on latency or misclassify birds as aerial threats.
+I built AeroNet for distinguishing between low-flying unmanned aerial vehicles (drones) and natural birds in real time is one of the hardest challenges in perimeter security and airspace monitoring. Traditional radar struggles with small radar cross-sections at low altitudes, while naive computer vision models either choke on latency or misclassify birds as aerial threats.
 
 AeroNet solves this with an edge-deployable, dual-stage vision architecture. It captures live camera feeds, localizes candidate airborne objects in real-time with YOLOv8 at ~15ms inference latency, extracts deep 512-dimensional visual embeddings using a ResNet-18 backbone, and classifies targets with a calibrated classifier — achieving 98.66% validation accuracy. When an unauthorized drone enters the sector, the system highlights the target reticle in red and updates real-time telemetry metrics.
-
----
-
-## Screenshots
-
-**Live Detection Dashboard** — live camera stream, cyberpunk tactical HUD, real-time FPS counter, and classification probabilities
-
-![AeroNet Live Dashboard](./samples/dashboard-preview.png)
-
-**Telemetry & Real-Time Stats** — total scans, drone vs bird breakdown, and average confidence telemetry
-
-![Telemetry Analytics](./samples/telemetry-preview.png)
 
 ---
 
@@ -145,38 +133,6 @@ Open your browser at `http://localhost:8000`.
 | `POST` | `/api/detect` | Multi-part image/snapshot detection with YOLOv8 localization & ResNet-18 classification |
 | `POST` | `/classify` | Form-based image upload and HTML report rendering |
 | `GET` | `/api/stats` | Returns real-time session telemetry, scan counts, and recent detections |
-
----
-
-## How to Deploy on Render
-
-Deploying AeroNet on Render is completely free and takes under 3 minutes:
-
-1. **Push to GitHub**:
-   Ensure your code is pushed to your GitHub account:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit of AeroNet"
-   git branch -M main
-   git remote add origin https://github.com/<your-username>/AeroNet.git
-   git push -u origin main
-   ```
-2. **Open Render**:
-   Go to [dashboard.render.com](https://dashboard.render.com/) and sign in with your GitHub account.
-3. **Create New Web Service**:
-   - Click **New +** → **Web Service**.
-   - Select **Build and deploy from a Git repository** and connect your `AeroNet` repository.
-4. **Configure Settings**:
-   - **Name**: `aeronet` (or your preferred name)
-   - **Region**: Closest to you (e.g., Oregon, Frankfurt, Singapore)
-   - **Branch**: `main`
-   - **Runtime**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `uvicorn app:app --host 0.0.0.0 --port $PORT`
-   - **Instance Type**: `Free`
-5. **Deploy**:
-   Click **Create Web Service**. Render will automatically install dependencies, load the model bundle, and launch your live app at `https://aeronet-xxxx.onrender.com`!
 
 ---
 
