@@ -1,6 +1,6 @@
 <div align="center">
 
-# AeroNet — Real-Time Drone & Bird Airspace Defense Surveillance
+# AeroNet — Real-Time Drone & Bird Defense Zone Surveillance
 
 **An embedded edge-AI surveillance system combining YOLOv8 target localization, ResNet-18 visual feature extraction, and real-time classification to secure sensitive airspace.**
 
@@ -11,7 +11,7 @@
 [![OpenCV](https://img.shields.io/badge/OpenCV-Headless-5C3EE8.svg?logo=opencv)](https://opencv.org/)
 [![Render](https://img.shields.io/badge/Deploy-Render-46E3B7.svg?logo=render)](https://render.com/)
 
-### 🔗 Live: [aeronet.onrender.com](https://aeronet.onrender.com/)
+### 🔗 Live: https://aeronet-ng9t.onrender.com/
 
 </div>
 
@@ -19,21 +19,9 @@
 
 ## What it is
 
-I built AeroNet as my final year capstone project for placements because distinguishing between low-flying unmanned aerial vehicles (drones) and natural birds in real time is one of the hardest challenges in perimeter security and airspace monitoring. Traditional radar struggles with small radar cross-sections at low altitudes, while naive computer vision models either choke on latency or misclassify birds as aerial threats.
+Distinguishing between low-flying unmanned aerial vehicles (drones) and natural birds in real time is one of the hardest challenges in perimeter security and airspace monitoring. Traditional radar struggles with small radar cross-sections at low altitudes, while naive computer vision models either choke on latency or misclassify birds as aerial threats.
 
-AeroNet solves this with an edge-deployable, dual-stage vision architecture. It captures live camera feeds, localizes candidate airborne objects in real-time with YOLOv8 at ~15ms inference latency, extracts deep 512-dimensional visual embeddings using a ResNet-18 backbone, and classifies targets with a calibrated classifier — achieving 98.66% validation accuracy. When an unauthorized drone enters the sector, the system highlights the target reticle in red and updates real-time telemetry metrics.
-
----
-
-## Screenshots
-
-**Live Detection Dashboard** — live camera stream, cyberpunk tactical HUD, real-time FPS counter, and classification probabilities
-
-![AeroNet Live Dashboard](./samples/dashboard-preview.png)
-
-**Telemetry & Real-Time Stats** — total scans, drone vs bird breakdown, and average confidence telemetry
-
-![Telemetry Analytics](./samples/telemetry-preview.png)
+AeroNet solves this with an edge-deployable, dual-stage vision architecture. It ingests aerial imagery, localizes candidate airborne objects in real time with YOLOv8 at ~15ms inference latency, extracts deep 512-dimensional visual embeddings using a ResNet-18 backbone, and classifies targets with a calibrated classifier — achieving 98.66% validation accuracy. When an unauthorized drone enters the sector, the system highlights the target reticle in red and updates real-time telemetry metrics.
 
 ---
 
@@ -41,15 +29,13 @@ AeroNet solves this with an edge-deployable, dual-stage vision architecture. It 
 
 **Dual-Stage Vision Pipeline** — decoupled localization and classification. YOLOv8 isolates regions of interest at 30+ FPS, while ResNet-18 deep feature extraction provides industrial-grade classification accuracy.
 
-**Real-Time Webcam Streaming** — mirrored live video feed with low-latency client-server frame streaming, automatic canvas overlay rendering, and real-time FPS measurement.
+**Instant Threat Identification & Localization** — rapid upload analysis with automatic bounding box localization, overlaid classification badges, and probability breakdowns.
+
+**Interactive Sample Dataset Testing** — one-click instant evaluation cards for preloaded drone, bird, and neutral background samples directly from the dashboard.
 
 **High-Precision Classification** — trained on thousands of aerial drone and bird imagery samples, achieving 98.66% validation accuracy with sub-percent false positive rates.
 
-**Modern Cyberpunk Tactical HUD** — dark neon aerospace theme, dynamic status indicators, target reticle bracket tracking, and live probability distribution meters.
-
 **Session Telemetry** — tracks live scan count, threat detection ratios, running confidence averages, and real-time audit logs without persistent database clutter.
-
-**Zero Client Setup** — entirely web-based edge demonstrator served directly via FastAPI and modern responsive HTML5/CSS3/ES6 JavaScript.
 
 ---
 
@@ -70,7 +56,7 @@ AeroNet solves this with an edge-deployable, dual-stage vision architecture. It 
 
 | Layer | Tech |
 |---|---|
-| Frontend | HTML5 Canvas, Vanilla ES6+, Modern CSS3 Glassmorphism |
+| Frontend | HTML5, Vanilla ES6+, Modern CSS3 Glassmorphism |
 | Backend | Python 3.10+, FastAPI, Starlette, Uvicorn |
 | Machine Learning | PyTorch, Torchvision (ResNet-18), Scikit-Learn |
 | Object Detection | Ultralytics YOLOv8 (Nano) |
@@ -88,11 +74,15 @@ AeroNet/
 │   ├── metrics.json                # validation metrics and confusion matrix
 │   └── prediction_history.json     # runtime session history
 ├── templates/
-│   └── index.html                  # single-page cyberpunk surveillance UI & live stream
+│   └── index.html                  # single-page cyberpunk surveillance UI & analysis
 ├── samples/
-│   ├── bird.png                    # test bird sample image
-│   └── drone.png                   # test drone sample image
-├── app.py                          # FastAPI application and live API endpoints
+│   ├── sample_1.jpg                # distant airspace surveillance target 01
+│   ├── sample_2.jpg                # distant airspace surveillance target 02
+│   ├── sample_3.jpg                # distant airspace surveillance target 03
+│   ├── sample_4.jpg                # distant airspace surveillance target 04
+│   ├── sample_5.jpg                # distant airspace surveillance target 05
+│   └── sample_6.jpg                # distant airspace surveillance target 06
+├── app.py                          # FastAPI application and API endpoints
 ├── predict.py                      # ResNet-18 feature extraction & inference logic
 ├── train.py                        # standalone model training pipeline
 ├── train.ipynb                     # training and EDA notebook
@@ -142,7 +132,7 @@ Open your browser at `http://localhost:8000`.
 | Method | Endpoint | Description |
 |---|---|---|
 | `GET` | `/` | Serves the main surveillance dashboard UI |
-| `POST` | `/api/detect` | Multi-part image/snapshot detection with YOLOv8 localization & ResNet-18 classification |
+| `POST` | `/api/detect` | Multi-part image upload detection with YOLOv8 localization & ResNet-18 classification |
 | `POST` | `/classify` | Form-based image upload and HTML report rendering |
 | `GET` | `/api/stats` | Returns real-time session telemetry, scan counts, and recent detections |
 
@@ -159,7 +149,7 @@ Deploying AeroNet on Render is completely free and takes under 3 minutes:
    git add .
    git commit -m "Initial commit of AeroNet"
    git branch -M main
-   git remote add origin https://github.com/<your-username>/AeroNet.git
+   git remote add origin https://github.com/ahlawatansh/AeroNet.git
    git push -u origin main
    ```
 2. **Open Render**:
@@ -176,7 +166,7 @@ Deploying AeroNet on Render is completely free and takes under 3 minutes:
    - **Start Command**: `uvicorn app:app --host 0.0.0.0 --port $PORT`
    - **Instance Type**: `Free`
 5. **Deploy**:
-   Click **Create Web Service**. Render will automatically install dependencies, load the model bundle, and launch your live app at `https://aeronet-xxxx.onrender.com`!
+   Click **Create Web Service**. Render will automatically install dependencies, load the model bundle, and launch your live app at `https://aeronet-ng9t.onrender.com`!
 
 ---
 

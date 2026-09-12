@@ -13,12 +13,21 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 ROOT = Path(__file__).resolve().parent
 DEFAULT_MODEL_PATH = ROOT / "artifacts" / "drone_bird_feature_lr.pkl"
+DRONE_CENTROID_PATH = ROOT / "artifacts" / "drone_centroid.npy"
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
 
 
 _MODEL_CACHE: dict[str, Any] = {}
 _EXTRACTOR_CACHE: dict[str, Any] = {}
+_DRONE_CENTROID: np.ndarray | None = None
+
+
+def get_drone_centroid() -> np.ndarray | None:
+    global _DRONE_CENTROID
+    if _DRONE_CENTROID is None and DRONE_CENTROID_PATH.exists():
+        _DRONE_CENTROID = np.load(DRONE_CENTROID_PATH)
+    return _DRONE_CENTROID
 
 
 def get_device() -> torch.device:
@@ -56,6 +65,16 @@ def get_cached_extractor(device: torch.device) -> torch.nn.Module:
     return _EXTRACTOR_CACHE[key]
 
 
+def prepare_rgb(image: Image.Image) -> Image.Image:
+    if image.mode in ("RGBA", "LA") or (image.mode == "P" and "transparency" in getattr(image, "info", {})):
+        rgba = image.convert("RGBA")
+        alpha = rgba.split()[-1]
+        bg = Image.new("RGB", rgba.size, (200, 220, 240))
+        bg.paste(rgba, mask=alpha)
+        return bg
+    return image.convert("RGB")
+
+
 def preprocess(image: Image.Image, image_size: int) -> torch.Tensor:
     transform = transforms.Compose(
         [
@@ -64,7 +83,8 @@ def preprocess(image: Image.Image, image_size: int) -> torch.Tensor:
             transforms.Normalize(IMAGENET_MEAN, IMAGENET_STD),
         ]
     )
-    return transform(image.convert("RGB")).unsqueeze(0)
+    return transform(prepare_rgb(image)).unsqueeze(0)
+
 
 
 def predict_image(
@@ -85,10 +105,20 @@ def predict_image(
 
     probs = classifier.predict_proba(features)[0]
     best_idx = int(np.argmax(probs))
+
+    drone_sim = 0.0
+    centroid = get_drone_centroid()
+    if centroid is not None:
+        feat_vec = features[0]
+        norm = float(np.linalg.norm(feat_vec))
+        if norm > 0:
+            drone_sim = float(np.dot(feat_vec / norm, centroid))
+
     return {
         "label": class_names[best_idx],
         "confidence": float(probs[best_idx]),
         "probabilities": {name: float(prob) for name, prob in zip(class_names, probs)},
+        "drone_similarity": drone_sim,
     }
 
 
